@@ -7,69 +7,27 @@
  */
 import React from "react";
 import { render, fireEvent } from "@testing-library/react";
-import Signup, {
-  State,
-  incrementAction,
-  decrementAction,
-  reducer,
-  Total
-} from "./Signup";
-
-describe("reducer", () => {
-  let state: State;
-
-  beforeEach(() => {
-    state = {
-      count: 0,
-    };
-  });
-
-  it("should increment count", () => {
-    expect(reducer(state, incrementAction())).toEqual({
-      count: 1,
-    });
-  });
-
-  it("should decrement count", () => {
-    expect(reducer(state, decrementAction())).toEqual({
-      count: -1,
-    });
-  });
-});
+import Signup from "./Signup";
 
 describe("<Signup />", () => {
   it("should not log errors in console", () => {
     const spy = jest.spyOn(global.console, "error");
-    render(<Signup title="Signup" />);
+    render(<Signup />);
     expect(spy).not.toHaveBeenCalled();
   });
 
-  it("should display the title", () => {
-    const { getByRole } = render(<Signup title="Signup" />);
-    expect(getByRole("banner")).toHaveTextContent(/Signup/);
-  });
-
-  it("should increment the count", () => {
-    const { getByLabelText } = render(<Signup title="Signup" />);
-    const increment = getByLabelText("increment");
-    fireEvent.click(increment);
-    fireEvent.click(increment);
-    expect(getByLabelText("total")).toHaveTextContent("2");
-  });
-
-  it("should decrement the count", () => {
-    const { getByLabelText } = render(<Signup title="Signup" />);
-    const decrement = getByLabelText("decrement");
-    fireEvent.click(decrement);
-    fireEvent.click(decrement);
-    expect(getByLabelText("total")).toHaveTextContent("-2");
-  });
-});
-
-describe('<Total />', () => {
-  it("should not log errors in console", () => {
-    const spy = jest.spyOn(global.console, "error");
-    render(<Total />);
-    expect(spy).not.toHaveBeenCalled();
-  });
+  it.todo("should persist username");
+  it.todo("should persist password");
+  it.todo("should persist confirm-password");
+  it.todo("should focus on username on load");
+  it.todo("should disable the submit button if the form is empty");
+  it.todo("should disable the submit button if a username is missing");
+  it.todo("should disable the submit button if a password is missing");
+  it.todo("should disable the submit button if a confirm password is missing");
+  it.todo(
+    "should disable the submit button and show an error if password fields don't match"
+  );
+  it.todo(
+    "should not show an error if password has a value but confirm password is empty"
+  );
 });
