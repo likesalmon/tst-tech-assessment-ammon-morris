@@ -14,7 +14,7 @@ interface AppProps {}
 const App: FunctionComponent<AppProps> = () => {
   return (
     <Container>
-      <Signup title="Signup" />
+      <Signup />
     </Container>
   );
 };

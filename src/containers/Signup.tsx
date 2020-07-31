@@ -3,16 +3,15 @@
  * Signup
  *
  */
-import React, { 
-  FunctionComponent,
-  useReducer,
-} from 'react';
-import styled from 'styled-components';
+import React, { FunctionComponent, useState } from "react";
+import styled from "styled-components";
 import Container from "@material-ui/core/Container";
-import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
-import AddIcon from "@material-ui/icons/Add";
-import RemoveIcon from "@material-ui/icons/Remove";
+import FormControl from "@material-ui/core/FormControl";
+import TextField from "@material-ui/core/TextField";
+import InputLabel from "@material-ui/core/InputLabel";
+import Button from "@material-ui/core/Button";
+
+import StyledForm from "../components/StyledForm";
 
 /**
  * ############################################################################
@@ -43,12 +42,16 @@ export enum ActionTypes {
 interface IncrementAction {
   type: ActionTypes.INCREMENT;
 }
-export const incrementAction = (): IncrementAction => ({ type: ActionTypes.INCREMENT });
+export const incrementAction = (): IncrementAction => ({
+  type: ActionTypes.INCREMENT,
+});
 
 interface DecrementAction {
   type: ActionTypes.DECREMENT;
 }
-export const decrementAction = (): DecrementAction => ({ type: ActionTypes.DECREMENT });
+export const decrementAction = (): DecrementAction => ({
+  type: ActionTypes.DECREMENT,
+});
 
 // Add exhaustiveness checking to the reducer
 type Action = IncrementAction | DecrementAction;
@@ -77,35 +80,56 @@ export const reducer = (state: State, action: Action): State => {
  *
  * ############################################################################
  */
-interface SignupProps {
-  title: string;
-}
+type ChangeEvent = React.ChangeEvent<HTMLInputElement>;
 
-const Signup: FunctionComponent<SignupProps> = ({title}) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+interface SignupProps {}
+
+const Signup: FunctionComponent<SignupProps> = () => {
+  // const [state, dispatch] = useReducer(reducer, initialState);
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const submit = () => console.log("submit");
+  const passwordsMatch = password === confirmPassword;
 
   return (
     <Container>
-      <Typography variant="h2" component="h1" role="banner">Signup</Typography>
-
-      <IconButton onClick={() => dispatch(incrementAction())} aria-label="increment">
-        <AddIcon />
-      </IconButton>
-      <Total aria-label="total">{state.count as number}</Total>
-      <IconButton onClick={() => dispatch(decrementAction())} aria-label="decrement">
-        <RemoveIcon />
-      </IconButton>
+      <StyledForm noValidate onSubmit={submit}>
+        <TextField id="username" label="Username" />
+        <TextField
+          id="password"
+          type="password"
+          label="Password"
+          error={password.length > 0 && password === confirmPassword}
+          onChange={(e: ChangeEvent): void =>
+            setPassword(e.currentTarget.value)
+          }
+        />
+        <InputLabel htmlFor="confirm-password">Confirm Password</InputLabel>
+        <TextField
+          id="confirm-password"
+          type="password"
+          label="Confirm Password"
+          error={confirmPassword.length > 0 && password === confirmPassword}
+          onChange={(e: ChangeEvent): void =>
+            setConfirmPassword(e.currentTarget.value)
+          }
+        />
+        <Button
+          type="submit"
+          disabled={
+            password.length < 1 &&
+            confirmPassword.length < 1 &&
+            password === confirmPassword
+          }
+          color="primary"
+          variant="contained"
+          size="large"
+        >
+          Submit
+        </Button>
+      </StyledForm>
     </Container>
   );
 };
 
-export const Total = styled.span`
-  margin: 0 10px;
-`;
-
 export default Signup;
-
-
-
-
-
