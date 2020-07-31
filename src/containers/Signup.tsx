@@ -4,74 +4,26 @@
  *
  */
 import React, { FunctionComponent, useState } from "react";
-import styled from "styled-components";
 import Container from "@material-ui/core/Container";
-import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
 import Button from "@material-ui/core/Button";
+import Box from "@material-ui/core/Box";
+import Typography from "@material-ui/core/Typography";
 
 import StyledForm from "../components/StyledForm";
 
 /**
- * ############################################################################
- *
- * State
- *
- * ############################################################################
+ * Curried function that accepts a dispatch method
+ * and an input event, then triggers the dispatch with
+ * the event value.
  */
-export interface State {
-  readonly count: number;
-}
-export const initialState: State = {
-  count: 0,
-};
-
+const handleChange = (dispatch: React.Dispatch<string>) => (
+  event: React.ChangeEvent<HTMLInputElement>
+) => dispatch(event.currentTarget.value);
 /**
- * ############################################################################
- *
- * Actions
- *
- * ############################################################################
+ * Returns true if the string is empty.
  */
-export enum ActionTypes {
-  INCREMENT,
-  DECREMENT,
-}
-
-interface IncrementAction {
-  type: ActionTypes.INCREMENT;
-}
-export const incrementAction = (): IncrementAction => ({
-  type: ActionTypes.INCREMENT,
-});
-
-interface DecrementAction {
-  type: ActionTypes.DECREMENT;
-}
-export const decrementAction = (): DecrementAction => ({
-  type: ActionTypes.DECREMENT,
-});
-
-// Add exhaustiveness checking to the reducer
-type Action = IncrementAction | DecrementAction;
-
-/**
- * ############################################################################
- *
- * Reducer
- *
- * ############################################################################
- */
-export const reducer = (state: State, action: Action): State => {
-  switch (action.type) {
-    case ActionTypes.INCREMENT:
-      return { ...state, count: state.count + 1 };
-    case ActionTypes.DECREMENT:
-      return { ...state, count: state.count - 1 };
-    // No default
-  }
-};
+const isEmpty = (str: string): boolean => Boolean(str.length);
 
 /**
  * ############################################################################
@@ -80,54 +32,76 @@ export const reducer = (state: State, action: Action): State => {
  *
  * ############################################################################
  */
-type ChangeEvent = React.ChangeEvent<HTMLInputElement>;
-
-interface SignupProps {}
-
-const Signup: FunctionComponent<SignupProps> = () => {
-  // const [state, dispatch] = useReducer(reducer, initialState);
+const Signup: FunctionComponent = () => {
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const submit = () => console.log("submit");
-  const passwordsMatch = password === confirmPassword;
+
+  // Show an error if Confirm Password has a value that
+  // doesn't match Password
+  const showError: boolean =
+    !isEmpty(confirmPassword) && password !== confirmPassword;
+  // Disable submit if any fields are empty or passwords don't match
+  const disableSubmit: boolean =
+    isEmpty(username) ||
+    isEmpty(password) ||
+    isEmpty(confirmPassword) ||
+    showError;
 
   return (
-    <Container>
-      <StyledForm noValidate onSubmit={submit}>
-        <TextField id="username" label="Username" />
-        <TextField
-          id="password"
-          type="password"
-          label="Password"
-          error={password.length > 0 && password === confirmPassword}
-          onChange={(e: ChangeEvent): void =>
-            setPassword(e.currentTarget.value)
-          }
-        />
-        <InputLabel htmlFor="confirm-password">Confirm Password</InputLabel>
-        <TextField
-          id="confirm-password"
-          type="password"
-          label="Confirm Password"
-          error={confirmPassword.length > 0 && password === confirmPassword}
-          onChange={(e: ChangeEvent): void =>
-            setConfirmPassword(e.currentTarget.value)
-          }
-        />
-        <Button
-          type="submit"
-          disabled={
-            password.length < 1 &&
-            confirmPassword.length < 1 &&
-            password === confirmPassword
-          }
-          color="primary"
-          variant="contained"
-          size="large"
-        >
-          Submit
-        </Button>
-      </StyledForm>
+    <Container disableGutters>
+      <Box margin={4}>
+        <Typography component="h1" variant="h3" align="center">
+          Sign Up
+        </Typography>
+      </Box>
+      <Box
+        borderRadius="borderRadius"
+        boxShadow={3}
+        padding={4}
+        width={300}
+        margin="0 auto"
+      >
+        <StyledForm noValidate>
+          <TextField
+            id="username"
+            label="Username"
+            required
+            fullWidth
+            value={username}
+            onChange={handleChange(setUsername)}
+            autoFocus
+          />
+          <TextField
+            id="password"
+            type="password"
+            label="Password"
+            required
+            fullWidth
+            error={showError}
+            onChange={handleChange(setPassword)}
+          />
+          <TextField
+            id="confirm-password"
+            type="password"
+            label="Confirm Password"
+            required
+            fullWidth
+            error={showError}
+            onChange={handleChange(setConfirmPassword)}
+            helperText={showError ? "Passwords must match." : null}
+          />
+          <Button
+            type="submit"
+            disabled={disableSubmit}
+            color="primary"
+            variant="contained"
+            size="large"
+          >
+            Submit
+          </Button>
+        </StyledForm>
+      </Box>
     </Container>
   );
 };
