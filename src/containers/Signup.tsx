@@ -23,7 +23,7 @@ const handleChange = (dispatch: React.Dispatch<string>) => (
 /**
  * Returns true if the string is empty.
  */
-const isEmpty = (str: string): boolean => Boolean(str.length);
+const isEmpty = (str: string): boolean => !Boolean(str.length);
 
 /**
  * ############################################################################
@@ -97,6 +97,7 @@ const Signup: FunctionComponent = () => {
             color="primary"
             variant="contained"
             size="large"
+            data-testid="submit"
           >
             Submit
           </Button>
