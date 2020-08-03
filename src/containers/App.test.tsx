@@ -15,9 +15,4 @@ describe("<App />", () => {
     render(<App />);
     expect(spy).not.toHaveBeenCalled();
   });
-
-  it("should have content", () => {
-    const { getByText } = render(<App />);
-    expect(getByText(/it works!/i)).toBeInTheDocument();
-  });
 });
