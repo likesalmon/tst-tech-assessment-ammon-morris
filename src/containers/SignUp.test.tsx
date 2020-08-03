@@ -109,7 +109,7 @@ describe("<SignUp />", () => {
   });
 
   it("should not reload on submit", () => {
-    const { getByLabelText, getByTestId, getByText } = render(<SignUp />);
+    const { getByLabelText, getByTestId } = render(<SignUp />);
     const usernameInput = getByLabelText(/^username/i);
     const passwordInput = getByLabelText(/^password/i);
     const confirmPasswordInput = getByLabelText(/^confirm password/i);

@@ -6,14 +6,14 @@
  *
  */
 import React, { FunctionComponent } from "react";
-import Signup from "./Signup";
+import SignUp from "./SignUp";
 
 interface AppProps {}
 
 const App: FunctionComponent<AppProps> = () => {
   return (
     <div>
-      <Signup />
+      <SignUp />
     </div>
   );
 };
