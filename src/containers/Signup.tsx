@@ -1,6 +1,6 @@
 /*
  *
- * Signup
+ * SignUp
  *
  */
 import React, { FunctionComponent, useState } from "react";
@@ -15,15 +15,21 @@ import StyledForm from "../components/StyledForm";
 /**
  * Curried function that accepts a dispatch method
  * and an input event, then triggers the dispatch with
- * the event value.
+ * the input value.
  */
 const handleChange = (dispatch: React.Dispatch<string>) => (
   event: React.ChangeEvent<HTMLInputElement>
-) => dispatch(event.currentTarget.value);
+): void => dispatch(event.currentTarget.value);
 /**
  * Returns true if the string is empty.
  */
 const isEmpty = (str: string): boolean => !Boolean(str.length);
+/**
+ * Prevent the page from reloading on submit.
+ */
+const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+  event.preventDefault();
+};
 
 /**
  * ############################################################################
@@ -32,16 +38,16 @@ const isEmpty = (str: string): boolean => !Boolean(str.length);
  *
  * ############################################################################
  */
-const Signup: FunctionComponent = () => {
+const SignUp: FunctionComponent = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   // Show an error if Confirm Password has a value that
-  // doesn't match Password
+  // doesn't match Password.
   const showError: boolean =
     !isEmpty(confirmPassword) && password !== confirmPassword;
-  // Disable submit if any fields are empty or passwords don't match
+  // Disable submit if any fields are empty or passwords don't match.
   const disableSubmit: boolean =
     isEmpty(username) ||
     isEmpty(password) ||
@@ -62,7 +68,7 @@ const Signup: FunctionComponent = () => {
         width={300}
         margin="0 auto"
       >
-        <StyledForm noValidate>
+        <StyledForm noValidate onSubmit={handleSubmit}>
           <TextField
             id="username"
             label="Username"
@@ -107,4 +113,4 @@ const Signup: FunctionComponent = () => {
   );
 };
 
-export default Signup;
+export default SignUp;
